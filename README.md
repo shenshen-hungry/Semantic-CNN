@@ -10,7 +10,7 @@ One can easily obtain the state-of-the-art or competitive results via running de
 
 
 # Requirements and preprocessing
-Code is written in Python (2.7) and requires Tensorflow (>=1.0.0, because of the order of artf.concat).
+Code is written in Python (2.7) and requires Tensorflow (>=1.0.0, because of the order of args in tf.concat).
 The data preprocessing and hyper-parameter setting strictly follow the implementation in https://github.com/yoonkim/CNN_sentence [1], whose preprocessing code is reused in our project.
 Pre-trained embedding 'GoogleNews-vectors-negative300.bin' is available at https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing.
 
@@ -34,6 +34,6 @@ This will train and test the model.
 
 
 # Reference
-Yoon Kim. Convolutional neural networks for sentence classification. EMNLP 2014.
+**Yoon Kim**. Convolutional neural networks for sentence classification. EMNLP 2014.
 
-Shen Li et al. Initializing Convolutional Filters with Semantic Features for Text Classification. EMNLP 2017.
+**Shen Li et al**. Initializing Convolutional Filters with Semantic Features for Text Classification. EMNLP 2017.
