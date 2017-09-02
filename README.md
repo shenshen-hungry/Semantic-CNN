@@ -35,4 +35,5 @@ This will train and test the model.
 
 # Reference
 Yoon Kim. Convolutional neural networks for sentence classification. EMNLP 2014.
+
 Shen Li et al. Initializing Convolutional Filters with Semantic Features for Text Classification. EMNLP 2017.
