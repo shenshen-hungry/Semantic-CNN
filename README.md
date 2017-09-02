@@ -3,7 +3,7 @@ Source code of the EMNLP 2017 paper *Initializing Convolutional Filters with Sem
 
 
 # The purpose of the project
-The project implements the weight initialization method in the submitted paper.
+The project implements the weight initialization method in the paper.
 
 Recently, CNN [1] is proven to be effective for sentence classification.  
 
