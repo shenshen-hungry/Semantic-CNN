@@ -18,15 +18,18 @@ Pre-trained embedding 'GoogleNews-vectors-negative300.bin' is available at https
 **** How to use
 To process the raw data:
 >> python process_data.py vectors_path
+
 This will create a pickle object called 'mr.p' in the same folder, which contains the dataset in the right format.
 
 To obtain the pre-trained features for weight initialization
 >> python initialize_filter.py [--ngram NGRAM] mr.p
+
 This will create a pickle object called 'weights_NGRAM.pkl', containing parameters 
 for initializing weights in the CNN filters.
 
 To train the model
 >> python cnn.py mr.p weights_NGRAM.pkl
+
 This will train and test the model.
 
 
