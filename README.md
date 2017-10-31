@@ -1,5 +1,6 @@
 # Initializing Convolutional Filters with Semantic Features for Text Classification
 Source code of the EMNLP 2017 paper *Initializing Convolutional Filters with Semantic Features for Text Classification*.
+http://aclweb.org/anthology/D17-1201
 
 
 # The purpose of the project
