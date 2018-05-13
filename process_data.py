@@ -1,7 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-import cPickle
+import pickle
 import re
 import sys
 import numpy as np
@@ -14,20 +11,20 @@ np.random.seed(3306)
 
 # loads data and split into 10 folds.
 def build_data_cv(filename, label, sentences, vocab, cv=10, clean_string=True):
-    with open(filename, "rb") as f:
+    with open(filename, 'r') as f:
         for line in f:
             rev = [line.strip()]
             if clean_string:
-                orig_rev = clean_str(" ".join(rev))
+                orig_rev = clean_str(' '.join(rev))
             else:
-                orig_rev = " ".join(rev).lower()
+                orig_rev = ' '.join(rev).lower()
             words = set(orig_rev.split())
             for word in words:
                 vocab[word] += 1
-            datum = {"y": label,
-                     "text": orig_rev,
-                     "num_words": len(orig_rev.split()),
-                     "split": np.random.randint(0, cv)}
+            datum = {'y': label,
+                     'text': orig_rev,
+                     'num_words': len(orig_rev.split()),
+                     'split': np.random.randint(0, cv)}
             sentences.append(datum)
 
 
@@ -48,19 +45,20 @@ def get_W(word_vecs, k=300):
 # loads 300x1 word vectors from file.
 def load_bin_vec(fname, vocab):
     word_vecs = {}
-    with open(fname, "rb") as f:
+    with open(fname, 'rb') as f:
         header = f.readline()
         vocab_size, layer1_size = map(int, header.split())
         binary_len = np.dtype('float32').itemsize * layer1_size
-        for line in xrange(vocab_size):
+        for line in range(vocab_size):
             word = []
             while True:
                 ch = f.read(1)
-                if ch == ' ':
-                    word = ''.join(word)
+                if ch == b' ':
+                    word = b''.join(word)
                     break
-                if ch != '\n':
-                    word.append(ch)   
+                if ch != b'\n':
+                    word.append(ch)
+            word = str(word, 'UTF-8')
             if word in vocab:
                 word_vecs[word] = np.fromstring(f.read(binary_len), dtype='float32')
             else:
@@ -78,53 +76,54 @@ def add_unknown_words(word_vecs, vocab, min_df=1, k=300):
 
 # clean data.
 def clean_str(string):
-    string = re.sub(r"[^A-Za-z0-9(),!?\'`]", " ", string)
-    string = re.sub(r"\'s", " \'s", string) 
-    string = re.sub(r"\'ve", " \'ve", string) 
-    string = re.sub(r"n\'t", " n\'t", string) 
-    string = re.sub(r"\'re", " \'re", string) 
-    string = re.sub(r"\'d", " \'d", string) 
-    string = re.sub(r"\'ll", " \'ll", string) 
-    string = re.sub(r",", " , ", string) 
-    string = re.sub(r"!", " ! ", string) 
-    string = re.sub(r"\(", " \( ", string) 
-    string = re.sub(r"\)", " \) ", string) 
-    string = re.sub(r"\?", " \? ", string) 
-    string = re.sub(r"\s{2,}", " ", string)    
+    string = re.sub(r'[^A-Za-z0-9(),!?\'`]', ' ', string)
+    string = re.sub(r'\'s', ' \'s', string) 
+    string = re.sub(r'\'ve', ' \'ve', string) 
+    string = re.sub(r'n\'t', ' n\'t', string) 
+    string = re.sub(r'\'re', ' \'re', string) 
+    string = re.sub(r'\'d', ' \'d', string) 
+    string = re.sub(r'\'ll', ' \'ll', string) 
+    string = re.sub(r',', ' , ', string) 
+    string = re.sub(r'!', ' ! ', string) 
+    string = re.sub(r'\(', ' \( ', string) 
+    string = re.sub(r'\)', ' \) ', string) 
+    string = re.sub(r'\?', ' \? ', string) 
+    string = re.sub(r'\s{2,}', ' ', string)    
     return string.strip().lower()
 
 
 # main function.
 def main():
-    args = docopt("""
+    args = docopt('''
         Usage:
             process_data.py <vectors_file>
-        """)
+        ''')
 
-    print("############")
-    print("process data")
-    print("############")
+    print('############')
+    print('process data')
+    print('############')
 
     vectors_file = args['<vectors_file>']                   # pre-trained word vectors file
-    data_folder = ["rt-polarity.neg", "rt-polarity.pos"]    # data files
-    datafile = "mr.p"                                       # save data and word vectors
+    data_folder = ['rt-polarity.neg', 'rt-polarity.pos']    # data files
+    datafile = 'mr.p'                                       # save data and word vectors
 
-    print("Loading Data...")
+    print('Loading Data...')
     sentences = []              # sentences processed
     vocab = defaultdict(float)  # vocabulary
     # process data
     build_data_cv(data_folder[0], 0, sentences, vocab, cv=10, clean_string=True)
     build_data_cv(data_folder[1], 1, sentences, vocab, cv=10, clean_string=True)
-    maxlen = np.max(pd.DataFrame(sentences)["num_words"])    # max length of sentences
-    print("Data Loaded!")
-    print("Number Of Sentences: " + str(len(sentences)))
-    print("Vocab Size: " + str(len(vocab)))
-    print("Max Sentence Length: " + str(maxlen))
+    np.random.shuffle(sentences)
+    maxlen = np.max(pd.DataFrame(sentences)['num_words'])    # max length of sentences
+    print('Data Loaded!')
+    print('Number Of Sentences: ' + str(len(sentences)))
+    print('Vocab Size: ' + str(len(vocab)))
+    print('Max Sentence Length: ' + str(maxlen))
 
-    print("Loading Vectors...")
+    print('Loading Vectors...')
     vectors = load_bin_vec(vectors_file, vocab)     # pre-trained vectors
-    print("Vectors Loaded!")
-    print("Words Already In Vectors: " + str(len(vectors)))
+    print('Vectors Loaded!')
+    print('Words Already In Vectors: ' + str(len(vectors)))
     # add random vectors of words which are not in vocab.
     add_unknown_words(vectors, vocab)
     W, word_idx_map = get_W(vectors)    # vectors of all words and a map of words to ids
@@ -134,8 +133,8 @@ def main():
     W2, _ = get_W(rand_vecs)            # random vectors of all words which are related to ids
 
     # save sentences and vectors
-    cPickle.dump([sentences, W, W2, word_idx_map, vocab, maxlen], open(datafile, "wb"))
-    print("Dataset created!")
+    pickle.dump([sentences, W, W2, word_idx_map, vocab, maxlen], open(datafile, 'wb'))
+    print('Dataset created!')
 
 
 # entry point.

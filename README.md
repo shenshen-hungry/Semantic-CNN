@@ -14,7 +14,7 @@ One can easily obtain the state-of-the-art or competitive results via running de
 
 
 # Requirements and preprocessing
-Code is written in Python (2.7) and requires Tensorflow (0.12.0).
+Code is written in Python3 and requires Tensorflow (>=1.0.0).
 
 The data preprocessing and hyper-parameter setting strictly follow the implementation in https://github.com/yoonkim/CNN_sentence [1], whose preprocessing code is reused in our project.
 
